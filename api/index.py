@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 import os
 import pickle
 import numpy as np
@@ -9,7 +9,7 @@ from sklearn.impute import SimpleImputer
 
 app = Flask(__name__)
 
-# Como el script está en /api, subimos una carpeta (..) para encontrar el modelo
+# Cargar el modelo
 MODEL_PATH = os.path.join(os.path.dirname(__file__), '..', 'best_model.pkl')
 with open(MODEL_PATH, 'rb') as f:
     model = pickle.load(f)
@@ -23,7 +23,21 @@ def compute_descriptors(smiles):
         return None
     return [func(mol) for _, func in DESC_LIST]
 
-# Vercel enrutará automáticamente las llamadas de /api a esta función
+# --- RUTAS PARA MOSTRAR TU DISEÑO WEB ---
+# Definimos dónde está la carpeta principal (un nivel por encima de /api)
+ROOT_DIR = os.path.join(os.path.dirname(__file__), '..')
+
+@app.route('/')
+def serve_index():
+    # Entregar el archivo HTML principal
+    return send_from_directory(ROOT_DIR, 'index.html')
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    # Entregar el CSS y el JS
+    return send_from_directory(ROOT_DIR, filename)
+# ----------------------------------------
+
 @app.route('/api', methods=['POST', 'GET'])
 def predict():
     if request.method == 'GET':
