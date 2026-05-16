@@ -1,10 +1,8 @@
-import joblib, os
 import numpy as np
-import pandas as pd
-import shap
 from rdkit import Chem
+import joblib, os, shap
+from rdkit.Chem.SaltRemover import SaltRemover 
 from rdkit.Chem import AllChem, Fragments, Descriptors
-from rdkit.Chem.SaltRemover import SaltRemover  # <--- IMPORTANTE: Añadido
 from flask import Flask, request, jsonify, render_template
 
 # --- CONFIGURACIÓN DE RUTAS ---
