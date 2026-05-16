@@ -540,3 +540,4 @@ if __name__ == "__main__":
     print("\n--- PROCESO COMPLETADO ---")
     print(f"1. AUC Medio de Validación (Purista): {avg_cv_auc:.4f}")
     print(f"2. AUC Final en Test (Sin Leakage): {test_auc:.4f}")
+    
